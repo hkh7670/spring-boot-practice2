@@ -25,7 +25,7 @@ import org.hibernate.annotations.Comment;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(access = AccessLevel.PRIVATE)
+@Builder
 public class UserPaymentHistory extends BaseTimeEntity {
 
   @Id
@@ -38,8 +38,8 @@ public class UserPaymentHistory extends BaseTimeEntity {
   @Column(name = "CARD_SEQ")
   private Long cardSeq;
 
-  @Column(name = "MERCHANT_ID")
-  private Long merchantId;
+  @Column(name = "MERCHANT_SEQ")
+  private Long merchantSeq;
 
   @Column(name = "USED_CARD_AMOUNT")
   private BigDecimal usedCardAmount;

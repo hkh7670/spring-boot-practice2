@@ -1,0 +1,31 @@
+### 유저 잔액 조회
+GET http://localhost:8080/api/payment/balance/ghhan
+Content-Type: application/json
+
+### 결제 예상 결과 조회
+POST http://localhost:8080/api/payment/estimate
+Content-Type: application/json
+
+{
+  "userId": "ghhan",
+  "amount": 150,
+  "currency": "USD",
+  "merchantId": "merchant123"
+}
+
+### 결제 승인 요청
+POST http://localhost:8080/api/payment/approval
+Content-Type: application/json
+
+{
+  "userId": "ghhan",
+  "amount": 150,
+  "currency": "USD",
+  "merchantId": "merchant123",
+  "paymentMethod": "POINT",
+  "paymentDetails": {
+    "cardNumber": "1234567890",
+    "expiryDate": "12/27",
+    "cvv": "131"
+  }
+}

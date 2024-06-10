@@ -1,5 +1,6 @@
 package com.example.springbootpractice.model.enums;
 
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,4 +13,13 @@ public enum CurrencyType {
 
 
   private final DecimalPointHandlingType handlingType; // 소숫점 핸들링 타입
+
+  public BigDecimal convert(BigDecimal amount) {
+    return amount.setScale(
+        this.handlingType.getScale(),
+        this.handlingType.getRoundingMode()
+    );
+  }
+
+
 }

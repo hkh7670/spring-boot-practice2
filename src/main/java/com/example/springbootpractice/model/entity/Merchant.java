@@ -1,44 +1,45 @@
 package com.example.springbootpractice.model.entity;
 
-import com.example.springbootpractice.model.enums.CurrencyType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.math.BigDecimal;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Comment;
 
 @Entity
-@Table(name = "USER_POINT")
+@Table(name = "MERCHANT_INFO",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "MERCHANT_ID_UNIQUE",
+            columnNames = ("MERCHANT_ID")
+        )
+    })
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)
-public class UserPoint extends BaseTimeEntity {
+public class Merchant extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long seq;
 
-  @Column(name = "USER_SEQ", nullable = false)
-  private Long userSeq;
+  @Column(name = "MERCHANT_ID", nullable = false)
+  private String merchantId;
 
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private CurrencyType currency;
+  @Column(name = "MERCHANT_NAME", nullable = false)
+  private String merchantName;
 
-  @Comment("잔여 포인트")
-  @Column(nullable = false)
-  private BigDecimal balance;
+  @Column(name = "IS_USED", nullable = false)
+  private Boolean isUsed;
+
 }
