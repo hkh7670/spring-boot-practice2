@@ -3,6 +3,7 @@ package com.example.springbootpractice.model.entity;
 import com.example.springbootpractice.model.enums.CurrencyType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Comment;
 
 import java.math.BigDecimal;
 
@@ -18,9 +19,13 @@ public class UserPoint extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
+
     @Column(name = "USER_SEQ")
-    private String userSeq;
+    private Long userSeq;
+
     @Enumerated(EnumType.STRING)
     private CurrencyType currency;
-    private BigDecimal balance; // 잔여 포인트
+
+    @Comment("잔여 포인트")
+    private BigDecimal balance;
 }

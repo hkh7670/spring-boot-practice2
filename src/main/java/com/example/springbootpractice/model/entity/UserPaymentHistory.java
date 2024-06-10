@@ -20,16 +20,22 @@ public class UserPaymentHistory extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
+
     @Column(name = "USER_SEQ")
-    private String userSeq;
+    private Long userSeq;
+
     @Column(name = "CARD_SEQ")
     private Long cardSeq;
+
     @Column(name = "MERCHANT_ID")
     private Long merchantId;
+
     @Column(name = "USED_CARD_AMOUNT")
     private BigDecimal usedCardAmount;
+
     @Column(name = "USED_POINT_AMOUNT")
     private BigDecimal usedPointAmount;
+
     @Enumerated(EnumType.STRING)
     private CurrencyType currency;
 }
