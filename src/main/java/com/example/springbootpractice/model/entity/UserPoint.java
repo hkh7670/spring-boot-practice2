@@ -1,11 +1,22 @@
 package com.example.springbootpractice.model.entity;
 
 import com.example.springbootpractice.model.enums.CurrencyType;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.Comment;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Table(name = "USER_POINT")
@@ -16,16 +27,16 @@ import java.math.BigDecimal;
 @Builder(access = AccessLevel.PRIVATE)
 public class UserPoint extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long seq;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long seq;
 
-    @Column(name = "USER_SEQ")
-    private Long userSeq;
+  @Column(name = "USER_SEQ")
+  private Long userSeq;
 
-    @Enumerated(EnumType.STRING)
-    private CurrencyType currency;
+  @Enumerated(EnumType.STRING)
+  private CurrencyType currency;
 
-    @Comment("잔여 포인트")
-    private BigDecimal balance;
+  @Comment("잔여 포인트")
+  private BigDecimal balance;
 }
