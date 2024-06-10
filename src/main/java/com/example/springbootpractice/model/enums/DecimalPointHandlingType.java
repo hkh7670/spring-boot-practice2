@@ -7,7 +7,7 @@ import java.math.RoundingMode;
 
 @Getter
 @RequiredArgsConstructor
-public enum DecimalPointHandleType {
+public enum DecimalPointHandlingType {
   // 화폐 별 소숫점 핸들링 타입
   USD(2, RoundingMode.FLOOR),
   KRW(0, RoundingMode.FLOOR),

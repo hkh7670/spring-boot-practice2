@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CurrencyType {
-  USD(DecimalPointHandleType.USD),
-  KRW(DecimalPointHandleType.KRW),
+  USD(DecimalPointHandlingType.USD),
+  KRW(DecimalPointHandlingType.KRW),
   ;
 
 
-  private final DecimalPointHandleType handleType;
+  private final DecimalPointHandlingType handlingType; // 소숫점 핸들링 타입
 }
