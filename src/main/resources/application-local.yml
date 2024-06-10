@@ -1,13 +1,17 @@
 spring:
+  h2:
+    console:
+      enabled: true  # H2 Console을 사용할지 여부 (H2 Console은 H2 Database를 UI로 제공해주는 기능)
+      path: /h2-console  # H2 Console의 Path
   datasource:
-    url: jdbc:mysql://localhost:3306/TEST_SCHEMA?rewriteBatchedStatements=true&useSSL=false&characterEncoding=UTF-8&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=200
-    username: root
-    password: rbghrn7670
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.h2.Driver  # Database를 H2로 사용하겠다.
+    url: jdbc:h2:~/test  # H2 접속 정보
+    username: sa  # H2 접속 시 입력할 username 정보 (원하는 것으로 입력)
+    password:  # H2 접속 시 입력할 password 정보 (원하는 것으로 입력)
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl

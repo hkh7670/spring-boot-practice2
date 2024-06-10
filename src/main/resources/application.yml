@@ -1,6 +1,6 @@
 spring:
   application:
-    name: spring-boot-practice
+    name: switchone-be-homework
   profiles:
     active: local
 
