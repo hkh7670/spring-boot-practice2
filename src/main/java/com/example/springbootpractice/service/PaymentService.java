@@ -16,9 +16,13 @@ import com.example.springbootpractice.repository.UserPaymentHistoryRepository;
 import com.example.springbootpractice.repository.UserPointRepository;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
@@ -47,6 +51,8 @@ public class PaymentService {
 
   @Transactional
   public PaymentApprovalResponse createPaymentApprovalInfo(PaymentApprovalRequest request) {
+    log.info("txName: {}", TransactionSynchronizationManager.getCurrentTransactionName());
+    log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
     return switch (request.paymentMethod()) {
       case POINT -> createPointApprovalInfo(request);
       case DEBIT_CARD, CREDIT_CARD -> createCardApprovalInfo(request);
@@ -54,6 +60,8 @@ public class PaymentService {
   }
 
   private PaymentApprovalResponse createPointApprovalInfo(PaymentApprovalRequest request) {
+    log.info("txName: {}", TransactionSynchronizationManager.getCurrentTransactionName());
+    log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
     var user = userService.getUser(request.userId());
     var merchant = merchantService.getMerchant(request.merchantId());
     var userPoint = userPointRepository.findByUserSeq(user.getSeq());
@@ -61,6 +69,8 @@ public class PaymentService {
   }
 
   private PaymentApprovalResponse createCardApprovalInfo(PaymentApprovalRequest request) {
+    log.info("txName: {}", TransactionSynchronizationManager.getCurrentTransactionName());
+    log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
     var paymentDetails = request.paymentDetails();
     var user = userService.getUser(request.userId());
     var merchant = merchantService.getMerchant(request.merchantId());
