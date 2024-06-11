@@ -77,7 +77,7 @@ public class PaymentService {
     var card = cardRepository.findByUserSeqAndCardNum(user.getSeq(), paymentDetails.cardNumber())
         .orElseThrow(() -> new ApiErrorException(ErrorCode.NOT_FOUND));
     checkCardDetailInfo(card, paymentDetails);
-    var fees = request.currency().convert(request.amount().multiply(BigDecimal.valueOf(0.03)));
+    var fees = request.getFees();
     var amountTotal = request.amount().add(fees);
 
     // 신용카드 결제의 경우 바로 결제

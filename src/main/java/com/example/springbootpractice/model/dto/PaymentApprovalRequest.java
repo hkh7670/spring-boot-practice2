@@ -65,4 +65,16 @@ public record PaymentApprovalRequest(
     }
 
   }
+
+  /**
+   * 결제 수수료를 리턴한다.
+   * 원금의 3%
+   * 화폐 단위를 고려하여 리턴
+   * @return 결제 수수료
+   */
+  public BigDecimal getFees() {
+    return this.currency.convert(
+        this.amount.multiply(BigDecimal.valueOf(0.03))
+    );
+  }
 }
