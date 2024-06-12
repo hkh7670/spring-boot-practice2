@@ -49,7 +49,7 @@ public record PaymentApprovalRequest(
 
     public int getExpiryYear() {
       try {
-        return Integer.parseInt(this.expiryDate.split("/")[1]);
+        return Integer.parseInt("20" + this.expiryDate.split("/")[1]);
       } catch (Exception e) {
         throw new ApiErrorException(ErrorCode.BAD_REQUEST);
       }
@@ -67,9 +67,8 @@ public record PaymentApprovalRequest(
   }
 
   /**
-   * 결제 수수료를 리턴한다.
-   * 원금의 3%
-   * 화폐 단위를 고려하여 리턴
+   * 결제 수수료를 리턴한다. 원금의 3% 화폐 단위를 고려하여 리턴
+   *
    * @return 결제 수수료
    */
   public BigDecimal getFees() {

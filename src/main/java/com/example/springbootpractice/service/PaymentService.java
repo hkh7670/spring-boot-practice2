@@ -10,6 +10,7 @@ import com.example.springbootpractice.model.dto.PaymentEstimateResponse;
 import com.example.springbootpractice.model.dto.UserBalanceResponse;
 import com.example.springbootpractice.model.entity.Card;
 import com.example.springbootpractice.model.entity.UserPaymentHistory;
+import com.example.springbootpractice.model.entity.UserPoint;
 import com.example.springbootpractice.model.enums.PaymentType;
 import com.example.springbootpractice.repository.CardRepository;
 import com.example.springbootpractice.repository.UserPaymentHistoryRepository;
@@ -50,22 +51,12 @@ public class PaymentService {
   }
 
   @Transactional
-  public PaymentApprovalResponse createPaymentApprovalInfo(PaymentApprovalRequest request) {
-    log.info("txName: {}", TransactionSynchronizationManager.getCurrentTransactionName());
-    log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
-    return switch (request.paymentMethod()) {
-      case POINT -> createPointApprovalInfo(request);
-      case DEBIT_CARD, CREDIT_CARD -> createCardApprovalInfo(request);
-    };
-  }
-
-  @Transactional
   public PaymentApprovalResponse createPointApprovalInfo(PaymentApprovalRequest request) {
     log.info("txName: {}", TransactionSynchronizationManager.getCurrentTransactionName());
     log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
     var user = userService.getUser(request.userId());
     var merchant = merchantService.getMerchant(request.merchantId());
-    var userPoint = userPointRepository.findByUserSeq(user.getSeq());
+    UserPoint userPoint = userPointRepository.findByUserSeqAndCurrency(user.getSeq(), request.currency());
     var fees = request.getFees();
     var amountTotal = request.amount().add(fees);
     return null;
@@ -91,18 +82,20 @@ public class PaymentService {
 
     // 신용카드 결제의 경우 바로 결제
     if (PaymentType.CREDIT_CARD.equals(request.paymentMethod())) {
-      var paymentId = userPaymentHistoryRepository.save(UserPaymentHistory.builder()
-              .userSeq(user.getSeq())
-              .cardSeq(card.getSeq())
-              .merchantSeq(merchant.getSeq())
-              .usedCardAmount(amountTotal)
-              .usedPointAmount(BigDecimal.ZERO)
-              .currency(request.currency())
-              .build())
+      var paymentId = userPaymentHistoryRepository.save(
+              UserPaymentHistory.builder()
+                  .userSeq(user.getSeq())
+                  .cardSeq(card.getSeq())
+                  .merchantSeq(merchant.getSeq())
+                  .usedCardAmount(amountTotal)
+                  .usedPointAmount(BigDecimal.ZERO)
+                  .currency(request.currency())
+                  .build())
           .getSeq();
-
+      return PaymentApprovalResponse.of(paymentId, amountTotal, request.currency());
     }
-    // 직불카드 결제의 경우 잔액을 확인
+
+    // 직불카드 결제의 경우 잔액 확인 후 결제 처리
 
     return null;
   }
@@ -110,7 +103,7 @@ public class PaymentService {
   private void checkCardDetailInfo(Card card, PaymentDetails paymentDetails) {
     // cvv 코드가 일치하지 않는 경우 에러 처리
     if (!paymentDetails.cvv().equals(card.getCvv())) {
-      throw new ApiErrorException(ErrorCode.BAD_REQUEST);
+      throw new ApiErrorException(ErrorCode.INCORRECT_CARD_DETAIL_INFO);
     }
 
     // 만료 일시가 일치하지 않는 경우 에러 처리
@@ -118,7 +111,7 @@ public class PaymentService {
         paymentDetails.getExpiryMonth(),
         paymentDetails.getExpiryYear())
     ) {
-      throw new ApiErrorException(ErrorCode.BAD_REQUEST);
+      throw new ApiErrorException(ErrorCode.INCORRECT_CARD_DETAIL_INFO);
     }
   }
 

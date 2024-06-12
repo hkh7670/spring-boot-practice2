@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,13 @@ import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
 @Entity
-@Table(name = "USER_POINT")
+@Table(name = "USER_POINT",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "USER_SEQ_CURRENCY_UNIQUE",
+            columnNames = {"USER_SEQ", "CURRENCY"}
+        )
+    })
 @Getter
 @Setter
 @AllArgsConstructor

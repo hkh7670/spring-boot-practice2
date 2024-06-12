@@ -22,9 +22,9 @@ Content-Type: application/json
   "amount": 150,
   "currency": "USD",
   "merchantId": "merchant123",
-  "paymentMethod": "POINT",
+  "paymentMethod": "CREDIT_CARD",
   "paymentDetails": {
-    "cardNumber": "1234567890",
+    "cardNumber": "9876543210",
     "expiryDate": "12/27",
     "cvv": "131"
   }

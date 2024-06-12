@@ -17,10 +17,13 @@ public record PaymentApprovalResponse(
 
 ) {
 
-  public static PaymentApprovalResponse of(long paymentId) {
+  public static PaymentApprovalResponse of(long paymentId, BigDecimal amountTotal, CurrencyType currency) {
     return PaymentApprovalResponse.builder()
         .paymentId(paymentId)
         .status(PaymentStatusType.APPROVED)
+        .amountTotal(amountTotal)
+        .currency(currency)
+        .timestamp(LocalDateTime.now())
         .build();
   }
 
