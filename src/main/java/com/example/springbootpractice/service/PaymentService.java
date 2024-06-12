@@ -56,10 +56,29 @@ public class PaymentService {
     log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
     var user = userService.getUser(request.userId());
     var merchant = merchantService.getMerchant(request.merchantId());
-    UserPoint userPoint = userPointRepository.findByUserSeqAndCurrency(user.getSeq(), request.currency());
+    UserPoint userPoint = userPointRepository.findByUserSeqAndCurrency(user.getSeq(),
+            request.currency())
+        .orElseThrow(() -> new ApiErrorException(ErrorCode.NOT_FOUND_USER_POINT));
+
     var fees = request.getFees();
     var amountTotal = request.amount().add(fees);
-    return null;
+
+    if (amountTotal.compareTo(userPoint.getBalance()) > 0) {
+      throw new ApiErrorException(ErrorCode.INSUFFICIENT_POINT);
+    }
+    userPoint.deductBalance(amountTotal);
+    var paymentId = userPaymentHistoryRepository.save(
+            UserPaymentHistory.builder()
+                .userSeq(user.getSeq())
+                .cardSeq(null)
+                .merchantSeq(merchant.getSeq())
+                .usedCardAmount(BigDecimal.ZERO)
+                .usedPointAmount(amountTotal)
+                .currency(request.currency())
+                .build())
+        .getSeq();
+    return PaymentApprovalResponse.of(paymentId, amountTotal, request.currency());
+
   }
 
   @Transactional

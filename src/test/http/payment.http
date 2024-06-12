@@ -19,10 +19,10 @@ Content-Type: application/json
 
 {
   "userId": "ghhan",
-  "amount": 150,
+  "amount": 2,
   "currency": "USD",
   "merchantId": "merchant123",
-  "paymentMethod": "CREDIT_CARD",
+  "paymentMethod": "POINT",
   "paymentDetails": {
     "cardNumber": "9876543210",
     "expiryDate": "12/27",

@@ -14,7 +14,10 @@ public enum ErrorCode {
   NOT_FOUND_USER(HttpStatus.NOT_FOUND, "유저정보를 찾을 수 없습니다."),
   NOT_FOUND_MERCHANT(HttpStatus.NOT_FOUND, "상점정보를 찾을 수 없습니다."),
 
+  NOT_FOUND_USER_POINT(HttpStatus.NOT_FOUND, "유저 포인트 정보를 찾을 수 없습니다."),
+
   UNUSED_CARD(HttpStatus.UNPROCESSABLE_ENTITY, "미사용 카드 입니다."),
+  INSUFFICIENT_POINT(HttpStatus.UNPROCESSABLE_ENTITY, "포인트가 부족합니다."),
 
 
 

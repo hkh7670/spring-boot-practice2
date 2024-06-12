@@ -48,4 +48,8 @@ public class UserPoint extends BaseTimeEntity {
   @Comment("잔여 포인트")
   @Column(nullable = false)
   private BigDecimal balance;
+
+  public void deductBalance(BigDecimal amount) {
+    this.balance = balance.subtract(amount);
+  }
 }
