@@ -17,5 +17,12 @@ public record PaymentApprovalResponse(
 
 ) {
 
+  public static PaymentApprovalResponse of(long paymentId) {
+    return PaymentApprovalResponse.builder()
+        .paymentId(paymentId)
+        .status(PaymentStatusType.APPROVED)
+        .build();
+  }
+
 
 }

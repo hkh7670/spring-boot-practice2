@@ -41,7 +41,10 @@ public class PaymentController {
   public PaymentApprovalResponse requestPaymentApproval(
       @RequestBody @Valid PaymentApprovalRequest request) {
     request.validate();
-    return paymentService.createPaymentApprovalInfo(request);
+    return switch (request.paymentMethod()) {
+      case POINT -> paymentService.createPointApprovalInfo(request);
+      case DEBIT_CARD, CREDIT_CARD -> paymentService.createCardApprovalInfo(request);
+    };
 //    var user = userService.getUser(request.userId());
 //    var merchant = merchantService.getMerchant(request.merchantId());
 //    return switch (request.paymentMethod()) {

@@ -59,16 +59,20 @@ public class PaymentService {
     };
   }
 
-  private PaymentApprovalResponse createPointApprovalInfo(PaymentApprovalRequest request) {
+  @Transactional
+  public PaymentApprovalResponse createPointApprovalInfo(PaymentApprovalRequest request) {
     log.info("txName: {}", TransactionSynchronizationManager.getCurrentTransactionName());
     log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
     var user = userService.getUser(request.userId());
     var merchant = merchantService.getMerchant(request.merchantId());
     var userPoint = userPointRepository.findByUserSeq(user.getSeq());
+    var fees = request.getFees();
+    var amountTotal = request.amount().add(fees);
     return null;
   }
 
-  private PaymentApprovalResponse createCardApprovalInfo(PaymentApprovalRequest request) {
+  @Transactional
+  public PaymentApprovalResponse createCardApprovalInfo(PaymentApprovalRequest request) {
     log.info("txName: {}", TransactionSynchronizationManager.getCurrentTransactionName());
     log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
     var paymentDetails = request.paymentDetails();
@@ -77,19 +81,26 @@ public class PaymentService {
     var card = cardRepository.findByUserSeqAndCardNum(user.getSeq(), paymentDetails.cardNumber())
         .orElseThrow(() -> new ApiErrorException(ErrorCode.NOT_FOUND));
     checkCardDetailInfo(card, paymentDetails);
+
+    if (!Boolean.TRUE.equals(card.getIsUsed())) {
+      throw new ApiErrorException(ErrorCode.UNUSED_CARD);
+    }
+
     var fees = request.getFees();
     var amountTotal = request.amount().add(fees);
 
     // 신용카드 결제의 경우 바로 결제
     if (PaymentType.CREDIT_CARD.equals(request.paymentMethod())) {
       var paymentId = userPaymentHistoryRepository.save(UserPaymentHistory.builder()
-          .userSeq(user.getSeq())
-          .cardSeq(card.getSeq())
-          .merchantSeq(merchant.getSeq())
-          .usedCardAmount(request.amount())
-          .usedPointAmount(BigDecimal.ZERO)
-          .currency(request.currency())
-          .build()).getSeq();
+              .userSeq(user.getSeq())
+              .cardSeq(card.getSeq())
+              .merchantSeq(merchant.getSeq())
+              .usedCardAmount(amountTotal)
+              .usedPointAmount(BigDecimal.ZERO)
+              .currency(request.currency())
+              .build())
+          .getSeq();
+
     }
     // 직불카드 결제의 경우 잔액을 확인
 
