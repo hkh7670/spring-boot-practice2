@@ -19,7 +19,7 @@ Content-Type: application/json
 
 {
   "userId": "ghhan",
-  "amount": 2,
+  "amount": 10,
   "currency": "USD",
   "merchantId": "merchant123",
   "paymentMethod": "POINT",

@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 
 @Slf4j
@@ -52,8 +51,6 @@ public class PaymentService {
 
   @Transactional
   public PaymentApprovalResponse createPointApprovalInfo(PaymentApprovalRequest request) {
-    log.info("txName: {}", TransactionSynchronizationManager.getCurrentTransactionName());
-    log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
     var user = userService.getUser(request.userId());
     var merchant = merchantService.getMerchant(request.merchantId());
     UserPoint userPoint = userPointRepository.findByUserSeqAndCurrency(user.getSeq(),
@@ -83,8 +80,6 @@ public class PaymentService {
 
   @Transactional
   public PaymentApprovalResponse createCardApprovalInfo(PaymentApprovalRequest request) {
-    log.info("txName: {}", TransactionSynchronizationManager.getCurrentTransactionName());
-    log.info("txActive: {}", TransactionSynchronizationManager.isActualTransactionActive());
     var paymentDetails = request.paymentDetails();
     var user = userService.getUser(request.userId());
     var merchant = merchantService.getMerchant(request.merchantId());
