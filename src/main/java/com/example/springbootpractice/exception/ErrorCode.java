@@ -18,6 +18,9 @@ public enum ErrorCode {
 
   UNUSED_CARD(HttpStatus.UNPROCESSABLE_ENTITY, "미사용 카드 입니다."),
   INSUFFICIENT_POINT(HttpStatus.UNPROCESSABLE_ENTITY, "포인트가 부족합니다."),
+  INSUFFICIENT_CARD_BALANCE(HttpStatus.UNPROCESSABLE_ENTITY, "카드 잔액이 부족합니다."),
+
+  DIFFERENT_CURRENCY(HttpStatus.UNPROCESSABLE_ENTITY, "화폐단위가 다릅니다."),
 
 
 

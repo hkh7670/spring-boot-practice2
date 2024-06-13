@@ -78,4 +78,8 @@ public class Card extends BaseTimeEntity {
     return !isSameExpiryDate(expiryMonth, expiryYear);
   }
 
+  public void deductBalance(BigDecimal amount) {
+    this.balance = balance.subtract(amount);
+  }
+
 }

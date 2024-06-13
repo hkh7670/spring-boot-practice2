@@ -110,8 +110,24 @@ public class PaymentService {
     }
 
     // 직불카드 결제의 경우 잔액 확인 후 결제 처리
-
-    return null;
+    if (!request.currency().equals(card.getCurrency())) {
+      throw new ApiErrorException(ErrorCode.DIFFERENT_CURRENCY);
+    }
+    if (amountTotal.compareTo(card.getBalance()) > 0) {
+      throw new ApiErrorException(ErrorCode.INSUFFICIENT_CARD_BALANCE);
+    }
+    card.deductBalance(amountTotal);
+    var paymentId = userPaymentHistoryRepository.save(
+            UserPaymentHistory.builder()
+                .userSeq(user.getSeq())
+                .cardSeq(card.getSeq())
+                .merchantSeq(merchant.getSeq())
+                .usedCardAmount(amountTotal)
+                .usedPointAmount(BigDecimal.ZERO)
+                .currency(request.currency())
+                .build())
+        .getSeq();
+    return PaymentApprovalResponse.of(paymentId, amountTotal, request.currency());
   }
 
   private void checkCardDetailInfo(Card card, PaymentDetails paymentDetails) {
