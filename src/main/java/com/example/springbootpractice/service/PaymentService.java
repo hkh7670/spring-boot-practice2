@@ -15,7 +15,6 @@ import com.example.springbootpractice.model.enums.PaymentType;
 import com.example.springbootpractice.repository.CardRepository;
 import com.example.springbootpractice.repository.UserPaymentHistoryRepository;
 import com.example.springbootpractice.repository.UserPointRepository;
-import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,14 +64,12 @@ public class PaymentService {
     }
     userPoint.deductBalance(amountTotal);
     var paymentId = userPaymentHistoryRepository.save(
-            UserPaymentHistory.builder()
-                .userSeq(user.getSeq())
-                .cardSeq(null)
-                .merchantSeq(merchant.getSeq())
-                .usedCardAmount(BigDecimal.ZERO)
-                .usedPointAmount(amountTotal)
-                .currency(request.currency())
-                .build())
+            UserPaymentHistory.toPointHistory(
+                user.getSeq(),
+                merchant.getSeq(),
+                amountTotal,
+                request.currency()
+            ))
         .getSeq();
     return PaymentApprovalResponse.of(paymentId, amountTotal, request.currency());
 
@@ -97,14 +94,12 @@ public class PaymentService {
     // 신용카드 결제의 경우 바로 결제
     if (PaymentType.CREDIT_CARD.equals(request.paymentMethod())) {
       var paymentId = userPaymentHistoryRepository.save(
-              UserPaymentHistory.builder()
-                  .userSeq(user.getSeq())
-                  .cardSeq(card.getSeq())
-                  .merchantSeq(merchant.getSeq())
-                  .usedCardAmount(amountTotal)
-                  .usedPointAmount(BigDecimal.ZERO)
-                  .currency(request.currency())
-                  .build())
+              UserPaymentHistory.toCardHistory(
+                  user.getSeq(),
+                  card.getSeq(),
+                  merchant.getSeq(),
+                  amountTotal,
+                  request.currency()))
           .getSeq();
       return PaymentApprovalResponse.of(paymentId, amountTotal, request.currency());
     }
@@ -118,14 +113,12 @@ public class PaymentService {
     }
     card.deductBalance(amountTotal);
     var paymentId = userPaymentHistoryRepository.save(
-            UserPaymentHistory.builder()
-                .userSeq(user.getSeq())
-                .cardSeq(card.getSeq())
-                .merchantSeq(merchant.getSeq())
-                .usedCardAmount(amountTotal)
-                .usedPointAmount(BigDecimal.ZERO)
-                .currency(request.currency())
-                .build())
+            UserPaymentHistory.toCardHistory(
+                user.getSeq(),
+                card.getSeq(),
+                merchant.getSeq(),
+                amountTotal,
+                request.currency()))
         .getSeq();
     return PaymentApprovalResponse.of(paymentId, amountTotal, request.currency());
   }

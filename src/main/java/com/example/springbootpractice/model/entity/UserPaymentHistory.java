@@ -49,4 +49,29 @@ public class UserPaymentHistory extends BaseTimeEntity {
 
   @Enumerated(EnumType.STRING)
   private CurrencyType currency;
+
+  public static UserPaymentHistory toPointHistory(long userSeq, long merchantSeq, BigDecimal amountTotal,
+      CurrencyType currency) {
+    return UserPaymentHistory.builder()
+        .userSeq(userSeq)
+        .cardSeq(null)
+        .merchantSeq(merchantSeq)
+        .usedCardAmount(BigDecimal.ZERO)
+        .usedPointAmount(amountTotal)
+        .currency(currency)
+        .build();
+  }
+
+  public static UserPaymentHistory toCardHistory(long userSeq, long cardSeq, long merchantSeq,
+      BigDecimal amountTotal,
+      CurrencyType currency) {
+    return UserPaymentHistory.builder()
+        .userSeq(userSeq)
+        .cardSeq(cardSeq)
+        .merchantSeq(merchantSeq)
+        .usedCardAmount(amountTotal)
+        .usedPointAmount(BigDecimal.ZERO)
+        .currency(currency)
+        .build();
+  }
 }
