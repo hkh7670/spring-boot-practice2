@@ -23,7 +23,7 @@ public class ApiCommonAdvice {
   public ErrorResponse handleMethodArgumentNotValidException(
       MethodArgumentNotValidException e) {
     var errorFields = e.getBindingResult().getFieldErrors();
-    return new ErrorResponse(ErrorCode.BAD_REQUEST,
+    return new ErrorResponse(ErrorCode.SCHEMA_VALIDATE_ERROR,
         errorFields.stream()
             .map(item -> ErrorField.of(item.getField(), item.getDefaultMessage()))
             .toList()
