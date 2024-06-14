@@ -15,6 +15,7 @@ import com.example.springbootpractice.model.enums.PaymentType;
 import com.example.springbootpractice.repository.CardRepository;
 import com.example.springbootpractice.repository.UserPaymentHistoryRepository;
 import com.example.springbootpractice.repository.UserPointRepository;
+import com.example.springbootpractice.util.BigDecimalUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,8 +59,7 @@ public class PaymentService {
 
     var fees = request.getFees();
     var amountTotal = request.amount().add(fees);
-
-    if (amountTotal.compareTo(userPoint.getBalance()) > 0) {
+    if (BigDecimalUtils.isGreaterThan(amountTotal, userPoint.getBalance())) {
       throw new ApiErrorException(ErrorCode.INSUFFICIENT_POINT);
     }
     userPoint.deductBalance(amountTotal);
@@ -108,7 +108,7 @@ public class PaymentService {
     if (!request.currency().equals(card.getCurrency())) {
       throw new ApiErrorException(ErrorCode.DIFFERENT_CURRENCY);
     }
-    if (amountTotal.compareTo(card.getBalance()) > 0) {
+    if (BigDecimalUtils.isGreaterThan(amountTotal, card.getBalance())) {
       throw new ApiErrorException(ErrorCode.INSUFFICIENT_CARD_BALANCE);
     }
     card.deductBalance(amountTotal);
