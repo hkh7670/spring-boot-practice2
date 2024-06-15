@@ -5,3 +5,4 @@
 - Gradle 8.6
 - Spring Data JPA
 - RestClient
+- H2
