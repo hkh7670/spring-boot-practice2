@@ -1,4 +1,4 @@
-# spring-boot-practice
+# switchone-backend
 
 - Java 17
 - Spring Boot 3.2.3
