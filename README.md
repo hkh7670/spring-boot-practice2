@@ -1,4 +1,4 @@
-# spring-boot-practice2
+# spring-boot-practice
 
 - Java 17
 - Spring Boot 3.2.3
